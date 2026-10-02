@@ -1,1 +1,2 @@
-loadstring(game:HttpGet("https://cdn.discordapp.com/attachments/1431589064003551242/1555464166351966218/hendar-raw-1790921955504.lua?backend=b2&ex=6ac09e64&is=6abf4ce4&hm=a19fb70deca157b024e538c8f5703778ea4aa1a7c8480535cec9fd445d547122&"))()
+task.wait(1)
+loadstring(game:HttpGet("https://cdn.discordapp.com/attachments/1431589064003551242/1555466229622382663/hendar-raw-1790922447488.lua?backend=b2&ex=6ac0a050&is=6abf4ed0&hm=e1489711ed7864e829902c19d89cc7d65b206fe350c1f53ab3248f147c2c17da&"))()
