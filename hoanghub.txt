@@ -2,7 +2,7 @@ local TweenService = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local CoreGui = game:GetService("CoreGui")
 
-local URL = "https://voidedx.vercel.app/api/raw?id=vx_v01a5hf1"
+local URL = "https://voidedx.vercel.app/api/raw?id=vx_zv4ygly0"
 
 local CONFIG = {
     Title = "HOANGTT.03",
