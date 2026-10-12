@@ -1,0 +1,304 @@
+
+
+
+
+
+
+
+
+
+
+
+local TweenService = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local CoreGui = game:GetService("CoreGui")
+
+local URL = "https://voidedx.vercel.app/api/raw?id=vx_m3wjoueu"
+
+local CONFIG = {
+    Title = "HOANGTT.03",
+    Accent = Color3.fromRGB(155, 80, 255),
+    Blue = Color3.fromRGB(65, 145, 255),
+    Background = Color3.fromRGB(10, 9, 18),
+}
+
+-- Cleanup previous loader
+local parent = CoreGui
+
+pcall(function()
+    parent = gethui()
+end)
+
+local old = parent:FindFirstChild("HoangttDownloadingLoader")
+if old then
+    old:Destroy()
+end
+
+local function new(class, props, parentObject)
+    local object = Instance.new(class)
+    for key, value in pairs(props) do
+        object[key] = value
+    end
+    object.Parent = parentObject
+    return object
+end
+
+local function animate(object, duration, props)
+    local t = TweenService:Create(
+        object,
+        TweenInfo.new(duration, Enum.EasingStyle.Quint,
+            Enum.EasingDirection.Out),
+        props
+    )
+    t:Play()
+    return t
+end
+
+local gui = new("ScreenGui", {
+    Name = "HoangttDownloadingLoader",
+    IgnoreGuiInset = true,
+    ResetOnSpawn = false,
+    DisplayOrder = 999999,
+}, parent)
+
+local backdrop = new("Frame", {
+    Size = UDim2.fromScale(1, 1),
+    BackgroundColor3 = CONFIG.Background,
+    BackgroundTransparency = 0.12,
+    BorderSizePixel = 0,
+}, gui)
+
+local card = new("Frame", {
+    AnchorPoint = Vector2.new(0.5, 0.5),
+    Position = UDim2.fromScale(0.5, 0.54),
+    Size = UDim2.new(0.86, 0, 0, 205),
+    BackgroundColor3 = Color3.fromRGB(19, 16, 32),
+    BorderSizePixel = 0,
+}, backdrop)
+
+new("UISizeConstraint", {
+    MinSize = Vector2.new(270, 205),
+    MaxSize = Vector2.new(420, 205),
+}, card)
+
+new("UICorner", {
+    CornerRadius = UDim.new(0, 16),
+}, card)
+
+new("UIStroke", {
+    Color = CONFIG.Accent,
+    Thickness = 1.2,
+    Transparency = 0.25,
+}, card)
+
+local title = new("TextLabel", {
+    Position = UDim2.new(0, 20, 0, 18),
+    Size = UDim2.new(1, -40, 0, 30),
+    BackgroundTransparency = 1,
+    Text = CONFIG.Title,
+    TextColor3 = Color3.fromRGB(248, 244, 255),
+    Font = Enum.Font.GothamBold,
+    TextSize = 22,
+    TextXAlignment = Enum.TextXAlignment.Left,
+}, card)
+
+local subtitle = new("TextLabel", {
+    Position = UDim2.new(0, 21, 0, 49),
+    Size = UDim2.new(1, -42, 0, 19),
+    BackgroundTransparency = 1,
+    Text = "CONNECTING TO SERVER...",
+    TextColor3 = CONFIG.Accent,
+    Font = Enum.Font.Code,
+    TextSize = 11,
+    TextXAlignment = Enum.TextXAlignment.Left,
+}, card)
+
+local percent = new("TextLabel", {
+    Position = UDim2.new(1, -75, 0, 88),
+    Size = UDim2.new(0, 52, 0, 22),
+    BackgroundTransparency = 1,
+    Text = "0%",
+    TextColor3 = Color3.new(1, 1, 1),
+    Font = Enum.Font.GothamBold,
+    TextSize = 15,
+    TextXAlignment = Enum.TextXAlignment.Right,
+}, card)
+
+local track = new("Frame", {
+    Position = UDim2.new(0, 21, 0, 116),
+    Size = UDim2.new(1, -42, 0, 6),
+    BackgroundColor3 = Color3.fromRGB(43, 37, 57),
+    BorderSizePixel = 0,
+    ClipsDescendants = true,
+}, card)
+
+new("UICorner", {
+    CornerRadius = UDim.new(1, 0),
+}, track)
+
+local fill = new("Frame", {
+    Size = UDim2.fromScale(0, 1),
+    BackgroundColor3 = CONFIG.Accent,
+    BorderSizePixel = 0,
+}, track)
+
+new("UICorner", {
+    CornerRadius = UDim.new(1, 0),
+}, fill)
+
+new("UIGradient", {
+    Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, CONFIG.Accent),
+        ColorSequenceKeypoint.new(1, CONFIG.Blue),
+    }),
+}, fill)
+
+local status = new("TextLabel", {
+    Position = UDim2.new(0, 21, 0, 135),
+    Size = UDim2.new(1, -42, 0, 20),
+    BackgroundTransparency = 1,
+    Text = "Preparing download...",
+    TextColor3 = Color3.fromRGB(170, 162, 190),
+    Font = Enum.Font.Gotham,
+    TextSize = 11,
+    TextXAlignment = Enum.TextXAlignment.Left,
+}, card)
+
+local footer = new("TextLabel", {
+    Position = UDim2.new(0, 21, 1, -28),
+    Size = UDim2.new(1, -42, 0, 15),
+    BackgroundTransparency = 1,
+    Text = "SECURE CONNECTION  •  HOANGTT.03",
+    TextColor3 = Color3.fromRGB(103, 96, 125),
+    Font = Enum.Font.Code,
+    TextSize = 9,
+    TextXAlignment = Enum.TextXAlignment.Left,
+}, card)
+
+local currentProgress = 0
+
+local function setProgress(value, message)
+    currentProgress = math.max(currentProgress, value)
+
+    subtitle.Text = message:upper()
+    percent.Text = string.format("%d%%", currentProgress)
+
+    animate(fill, 0.22, {
+        Size = UDim2.fromScale(currentProgress / 100, 1),
+    })
+end
+
+local function closeLoader()
+    if not gui.Parent then
+        return
+    end
+
+    animate(card, 0.22, {
+        Position = UDim2.fromScale(0.5, 0.46),
+        BackgroundTransparency = 1,
+    })
+
+    animate(backdrop, 0.28, {
+        BackgroundTransparency = 1,
+    })
+
+    task.wait(0.3)
+
+    if gui.Parent then
+        gui:Destroy()
+    end
+end
+
+local function showError(message)
+    if not gui.Parent then
+        return
+    end
+
+    subtitle.Text = "DOWNLOAD FAILED"
+    subtitle.TextColor3 = Color3.fromRGB(255, 85, 100)
+    status.Text = tostring(message):sub(1, 180)
+    status.TextColor3 = Color3.fromRGB(255, 125, 135)
+    footer.Text = "CHECK CONNECTION OR SCRIPT URL"
+
+    task.wait(2.5)
+    closeLoader()
+end
+
+-- Staged visual progress while the HTTP request is in flight.
+local stages = {
+    {8,  "Connecting to server..."},
+    {18, "Downloading hub data..."},
+    {32, "Downloading image assets..."},
+    {46, "Loading UI modules..."},
+    {58, "Processing configuration..."},
+    {68, "Preparing hub interface..."},
+}
+
+local finished = false
+
+task.spawn(function()
+    for _, stage in ipairs(stages) do
+        if finished then
+            return
+        end
+
+        setProgress(stage[1], stage[2])
+        task.wait(0.12)
+    end
+end)
+
+-- Fetch actual source; don't execute if the request fails.
+local requestOK, source = pcall(function()
+    return game:HttpGet(URL)
+end)
+
+finished = true
+
+if not requestOK then
+    showError("HTTP request failed: " .. tostring(source))
+    return
+end
+
+if type(source) ~= "string" or source:match("^%s*$") then
+    showError("Server returned an empty script.")
+    return
+end
+
+if #source < 20 then
+    showError("Downloaded response is too short.")
+    return
+end
+
+setProgress(76, "Download complete - compiling...")
+
+if type(loadstring) ~= "function" then
+    showError("loadstring is unavailable in this environment.")
+    return
+end
+
+local compileOK, chunk = pcall(loadstring, source)
+
+if not compileOK or type(chunk) ~= "function" then
+    showError("Compilation failed: " .. tostring(chunk))
+    return
+end
+
+setProgress(88, "Initializing hub modules...")
+task.wait(0.12)
+
+setProgress(96, "Launching hub...")
+task.wait(0.12)
+
+setProgress(100, "Hub launched successfully!")
+
+-- Run the hub separately because its main function may never return.
+task.spawn(function()
+    local runOK, runError = pcall(chunk)
+
+    if not runOK then
+        warn("[HOANGTT.03] Hub runtime error:", runError)
+    end
+end)
+
+task.wait(0.25)
+closeLoader()
