@@ -1,1 +1,1 @@
-loadstring(game:HttpGet("https://voidedx.vercel.app/api/raw?id=vx_2aajo7ct"))()
+loadstring(game:HttpGet("https://voidedx.vercel.app/api/raw?id=vx_2aajo7ct?&v=1&t=" .. tick(), true))()
